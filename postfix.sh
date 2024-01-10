@@ -5,25 +5,29 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "\033[0;32m# CONFIGURING BIND9:\033[0m"
-curl -o /usr/share/dns/root.hints https://www.internic.net/domain/named.root
-cat <<EOL > /etc/default/named
-RESOLVCONF=no
-OPTIONS="-u bind -4"
-EOL
-sleep 1
-
 echo -e "\033[0;32m# CONFIGURING POSTFIX & DOVECOT:\033[0m"
-
-echo -en "\e[36mAttach Domain: \e[0m"
+sleep 1
+echo -en "\e[36mCONF DOMAIN: \e[0m"
 read nm_domain
-host_domain="smtp.$nm_domain"
 
 regex="^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$"
 if [[ ! $nm_domain =~ $regex ]]; then
         echo -e "\e[31mError: Cannot configure with domain \"$nm_domain\"\e[0m"
         exit 1 
 fi
+
+echo -en "\e[36mHOSTNAME: \e[0m"
+read host_domain
+if [[ ! $host_domain =~ $regex ]]; then
+        echo -e "\e[31mError: Cannot configure with domain \"$nm_domain\"\e[0m"
+        exit 1 
+fi
+
+echo -en "\e[36mTLS CERT FILE: \e[0m"
+read tls_cert
+
+echo -en "\e[36mTLS KEY FILE: \e[0m"
+read tls_key
 
 echo -e "\e[33mPostfix configuring with domain \"smtp.$nm_domain\"\e[0m"
 sleep 1
@@ -101,8 +105,8 @@ broken_sasl_auth_clients = yes
 smtpd_use_tls = yes
 smtpd_tls_security_level = may
 smtpd_tls_auth_only = no
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_tls_cert_file=$tls_cert
+smtpd_tls_key_file=$tls_cert
 smtpd_tls_session_cache_database = btree:\${data_directory}/smtpd_scache
 smtpd_tls_received_header = yes
 smtpd_tls_security_level = may
