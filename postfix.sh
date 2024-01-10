@@ -22,6 +22,7 @@ if [[ ! $host_domain =~ $regex ]]; then
         echo -e "\e[31mError: Cannot configure with domain \"$nm_domain\"\e[0m"
         exit 1 
 fi
+echo -e "\e[33mPostfix configuring with domain \"$host_domain\"\e[0m"
 
 echo -en "\e[36mTLS CERT FILE: \e[0m"
 read tls_cert
@@ -29,7 +30,7 @@ read tls_cert
 echo -en "\e[36mTLS KEY FILE: \e[0m"
 read tls_key
 
-echo -e "\e[33mPostfix configuring with domain \"smtp.$nm_domain\"\e[0m"
+
 sleep 1
 
 groupadd -g 5000 vmail
