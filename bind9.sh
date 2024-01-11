@@ -11,6 +11,5 @@ cat <<EOL > /etc/default/named
 RESOLVCONF=no
 OPTIONS="-u bind -4"
 EOL
-sleep 2
 systemctl restart bind9
 echo -e "\033[0;32mOK\033[0m"
