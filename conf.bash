@@ -1113,10 +1113,9 @@ fi
 ADDR=\$1;
 BASEDIR="\$(postconf | grep ^virtual_mailbox_base | cut -f3 -d' ')";
 
-if grep -Fxq "\$ADDR" /etc/postfix/shadow_domains
-then
+if grep -q "\$ADDR" "/etc/postfix/shadow_domains"; then
     echo -e "\${RED}Domain already exist\${RESET}"
-    exit 1
+    exit
 else
     echo -e "\${GREEN}Adding Domain...\${RESET}"
 fi
@@ -1153,8 +1152,7 @@ BASEDIR="\$(postconf | grep ^virtual_mailbox_base | cut -f3 -d' ')";
 
 if [ -f /etc/postfix/shadowmailbox ]
 then
-  if grep -Fxq "\$ADDRESS" /etc/postfix/shadowmailbox
-  then
+  if grep -q "\$ADDR" "/etc/postfix/shadowmailbox"; then
     echo -e "\${RED}Mail address already exist\${RESET}"
     exit
   else
