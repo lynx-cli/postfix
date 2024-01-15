@@ -1152,7 +1152,7 @@ BASEDIR="\$(postconf | grep ^virtual_mailbox_base | cut -f3 -d' ')";
 
 if [ -f /etc/postfix/shadowmailbox ]
 then
-  if grep -q "\$ADDR" "/etc/postfix/shadowmailbox"; then
+  if grep -q "\$ADDRESS" "/etc/postfix/shadowmailbox"; then
     echo -e "\${RED}Mail address already exist\${RESET}"
     exit
   else
